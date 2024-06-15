@@ -1,0 +1,65 @@
+KMD
+00000000:             ; 
+00000000:             ; 
+00000000: EA000016    ;                 B main
+00000004: 0000000D    ; table   DEFW    13
+00000008: 20 69 73 20 ; is              DEFB    " is ",0
+0000000C: 00          ; 
+0000000D:             ; 
+00000010:             ;                 ALIGN
+00000010:             ; 
+00000010:             ; times
+00000010: E51F2014    ;         LDR R2, table ; loads data out of mem to R2
+00000014:             ; 
+00000014: E1A00003    ;         MOV R0, R3 ; put times in r0 register
+00000018: EF000004    ;         SWI 4
+0000001C:             ; 
+0000001C: E3A00078    ;         MOV R0, #120    ; store 120 -> x in r0 register
+00000020: EF000000    ;         SWI 0                  ; print char 
+00000024:             ; 
+00000024: E1A00002    ;         MOV R0, R2      ; print actual result
+00000028: EF000004    ;         SWI 4
+0000002C:             ; 
+0000002C: E24F002C    ;         ADR R0, is      ; print is string
+00000030: EF000003    ;         SWI 3
+00000034:             ; 
+00000034: E1A00001    ;         MOV R0,R1 ; moves data from R2 to R0
+00000038: EF000004    ;         SWI 4 ;PRINT
+0000003C:             ; 
+0000003C: E3A0000A    ;         MOV R0, #10 ;This prints newline
+00000040: EF000000    ;         SWI 0 ;This prints char
+00000044:             ; 
+00000044: E0811002    ;         ADD R1, R1, R2 ; Add 13 to r1 register
+00000048: E2833001    ;         ADD R3, R3, #1 ; ADD 1 to r3 register
+0000004C:             ; 
+0000004C: E51F4050    ;         LDR R4, table
+00000050:             ; 
+00000050: E1530004    ;         CMP R3, R4
+00000054: DAFFFFED    ;         BLE times
+00000058: AAFFFFFF    ;         BGE stop_protocol
+0000005C:             ; 
+0000005C:             ; stop_protocol
+0000005C:             ; 
+0000005C: EF000002    ;         SWI 2
+00000060:             ; 
+00000060:             ; main
+00000060:             ; 
+00000060:             ;         ;RESET REGISTER MEM
+00000060:             ; 
+00000060: E3A00000    ;         MOV R0, #0
+00000064: E3A01000    ;         MOV R1, #0
+00000068: E3A02000    ;         MOV R2, #0
+0000006C: E3A03000    ;         MOV R3, #0
+00000070:             ; 
+00000070: EAFFFFE6    ;         B times
+00000074:             ;      
+00000074: EF000002    ;         SWI 2
+00000078:             ; 
+00000078:             ;         
+
+Symbol Table: Labels
+: table                             00000004  Local -- ARM
+: is                                00000008  Local -- ARM
+: times                             00000010  Local -- ARM
+: stop_protocol                     0000005C  Local -- ARM
+: main                              00000060  Local -- ARM

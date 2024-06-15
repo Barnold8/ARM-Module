@@ -1,0 +1,165 @@
+KMD
+00000000: EA00002C    ;         B main
+00000004:             ; 
+00000004: 25 64 20 67 ; fs1     DEFB    "%d green %s sitting on a wall%c\n",0
+00000008: 72 65 65 6E ; 
+0000000C: 20 25 73 20 ; 
+00000010: 73 69 74 74 ; 
+00000014: 69 6E 67 20 ; 
+00000018: 6F 6E 20 61 ; 
+0000001C: 20 77 61 6C ; 
+00000020: 6C 25 63 0A ; 
+00000024: 00          ; 
+00000025: 54 68 69 73 ; fs2     DEFB    "This is a test containg nothing but a %%\n",0
+00000029: 20 69 73 20 ; 
+0000002D: 61 20 74 65 ; 
+00000031: 73 74 20 63 ; 
+00000035: 6F 6E 74 61 ; 
+00000039: 69 6E 67 20 ; 
+0000003D: 6E 6F 74 68 ; 
+00000041: 69 6E 67 20 ; 
+00000045: 62 75 74 20 ; 
+00000049: 61 20 25 25 ; 
+0000004D: 0A 00       ; 
+0000004F: 25 64 20 25 ; fs3     DEFB    "%d %d %d %d %d.\n%s!\n\n%s\n",0
+00000053: 64 20 25 64 ; 
+00000057: 20 25 64 20 ; 
+0000005B: 25 64 2E 0A ; 
+0000005F: 25 73 21 0A ; 
+00000063: 0A 25 73 0A ; 
+00000067: 00          ; 
+00000068: 62 6F 74 74 ; bottleString    DEFB "bottles",0
+0000006C: 6C 65 73 00 ; 
+00000070: 42 6C 61 73 ; blast   DEFB    "Blast Off!",0
+00000074: 74 20 4F 66 ; 
+00000078: 66 21 00    ; 
+0000007B: 48 65 6C 6C ; hello   DEFB    "Hello Universe",0
+0000007F: 6F 20 55 6E ; 
+00000083: 69 76 65 72 ; 
+00000087: 73 65 00    ; 
+0000008C:             ;         ALIGN
+0000008C: 0000000A    ; seq1    DEFW    10,bottleString, '.'
+00000090: 00000068    ; 
+00000094: 0000002E    ; 
+00000098: 00000001    ; seq2    DEFW    1
+0000009C: 00000005    ; seq3    DEFW    5,4,3,2,1,blast,hello
+000000A0: 00000004    ; 
+000000A4: 00000003    ; 
+000000A8: 00000002    ; 
+000000AC: 00000001    ; 
+000000B0: 00000070    ; 
+000000B4: 0000007B    ; 
+000000B8:             ; 
+000000B8: E24F1071    ; main    ADR R1,fs3              ; Feel free to change these to point to the other format specif
+                      ; iers and value sequencei
+000000BC: E24F2028    ;         ADR R2,seq3
+000000C0:             ; 
+000000C0: E3A00000    ;         MOV R0, #0
+000000C4: E3A03000    ;         MOV R3, #0
+000000C8: E3A05000    ;         MOV R5, #0
+000000CC:             ; 
+000000CC:             ; printf 
+000000CC:             ; ; You should start your program here
+000000CC:             ; ; DO NOT modify any of the code above (other than to try different tests -- the pipeline will r
+                      ; un further tests as well.)
+000000CC:             ; 
+000000CC:             ;         ;CMP R10, #32 ;R10 is reserved for a reset flag. if its 32 then reset all registers. Al
+                      ; lows for a clean program without messing any register up
+000000CC:             ;         ;BEQ reset
+000000CC:             ; 
+000000CC:             ; 
+000000CC: E7D10003    ;         LDRB R0, [R1,R3] ; Load char from memory. R1 is memory location and R3 is its offset
+000000D0: E3500000    ;         CMP R0, #0 ;Compare the char to null termination char
+000000D4: 0A000025    ;         BEQ end ; if it is, go to end subroutine
+000000D8:             ; 
+000000D8:             ; 
+000000D8: E3500025    ;         CMP R0, #'%'
+000000DC: 0A000002    ;         BEQ format
+000000E0:             ; 
+000000E0:             ; 
+000000E0: EF000000    ;         SWI 0   ;else, print a char
+000000E4: E2833001    ;         ADD R3,R3,#1 ; also add 1 to the index counter
+000000E8:             ; 
+000000E8: EAFFFFF7    ;         B printf        
+000000EC:             ; 
+000000EC:             ; 
+000000EC:             ; format
+000000EC:             ; 
+000000EC:             ; ;       MOV R4, R0; put % in r4 in case theres no format specifier
+000000EC: E2833001    ;         ADD R3, R3, #1 ; add to the pointer offset
+000000F0: E7D10003    ;         LDRB R0, [R1,R3] ; load the data 
+000000F4:             ; 
+000000F4:             ;         ; Comparison section
+000000F4: E3500064    ;         CMP R0, #'d'
+000000F8: 0A000007    ;         BEQ int_form
+000000FC: E3500073    ;         CMP R0, #'s'
+00000100: 0A00000B    ;         BEQ string_form
+00000104: E3500063    ;         CMP R0, #'c'
+00000108: 0A00000F    ;         BEQ char_form
+0000010C: E3500025    ;         CMP R0, #'%'
+00000110: 0A000012    ;         BEQ percent
+00000114:             ; 
+00000114:             ;         ; -------------
+00000114:             ; 
+00000114:             ; 
+00000114:             ;         ;MOV R0, R4 ; because no branches have been made for format specifiers, print the %
+00000114:             ;         ;SWI 0 ; actual print
+00000114: E2833001    ;         ADD R3, R3, #1
+00000118: EAFFFFEB    ;         B printf ; back to printf to go over again
+0000011C:             ; 
+0000011C:             ; int_form
+0000011C:             ; 
+0000011C: E7920005    ;         LDR R0, [R2,R5]
+00000120: EF000004    ;         SWI 4
+00000124: E3A00000    ;         MOV R0, #0
+00000128: E2855004    ;         ADD R5,R5,#4 ; Add 4 to R5 to move 4 bytes in memory since we read an integer
+0000012C: E2833001    ;         ADD R3, R3, #1
+00000130: EAFFFFE5    ;         B printf
+00000134:             ; 
+00000134:             ; string_form
+00000134:             ; 
+00000134: E7920005    ;         LDR R0, [R2,R5]
+00000138: EF000003    ;         SWI 3
+0000013C: E3A00000    ;         MOV R0, #0                      ;Doesnt count characters to be added to R5 :(
+00000140: E2855004    ;         ADD R5,R5, #4   
+00000144: E2833001    ;         ADD R3, R3, #1
+00000148: EAFFFFDF    ;         B printf
+0000014C:             ; 
+0000014C:             ; char_form
+0000014C:             ;         
+0000014C: E7D20005    ;         LDRB R0, [R2,R5]
+00000150: EF000000    ;         SWI 0
+00000154: E3A00000    ;         MOV R0, #0      
+00000158: E2833001    ;         ADD R3, R3, #1
+0000015C: EAFFFFDA    ;         B printf
+00000160:             ; 
+00000160:             ; percent
+00000160:             ; 
+00000160: E3A00025    ;         MOV R0, #'%'
+00000164: EF000000    ;         SWI 0
+00000168: E2833001    ;         ADD R3, R3, #1
+0000016C: EAFFFFD6    ;         B printf
+00000170:             ; 
+00000170:             ; 
+00000170:             ; end
+00000170: E3A0A020    ;         MOV R10, #32
+00000174: EF000002    ;         SWI 2
+
+Symbol Table: Labels
+: fs1                               00000004  Local -- ARM
+: fs2                               00000025  Local -- ARM
+: fs3                               0000004F  Local -- ARM
+: bottleString                      00000068  Local -- ARM
+: blast                             00000070  Local -- ARM
+: hello                             0000007B  Local -- ARM
+: seq1                              0000008C  Local -- ARM
+: seq2                              00000098  Local -- ARM
+: seq3                              0000009C  Local -- ARM
+: main                              000000B8  Local -- ARM
+: printf                            000000CC  Local -- ARM
+: format                            000000EC  Local -- ARM
+: int_form                          0000011C  Local -- ARM
+: string_form                       00000134  Local -- ARM
+: char_form                         0000014C  Local -- ARM
+: percent                           00000160  Local -- ARM
+: end                               00000170  Local -- ARM

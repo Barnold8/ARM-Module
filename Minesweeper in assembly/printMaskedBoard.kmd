@@ -1,0 +1,291 @@
+KMD
+00000000: EA00007F    ;             B test_printMaskedBoard
+00000004:             ; ;https://developer.arm.com/documentation/dui0068/b/Writing-ARM-and-Thumb-Assembly-Language/Load
+                      ; -and-store-multiple-register-instructions/Implementing-stacks-with-LDM-and-STM
+00000004:             ; ; Our board 
+00000004:             ; ; 0, represents an empty space
+00000004:             ; ; 1-8 represents the number of bombs around us
+00000004:             ; ; -1 represents there is a bomb at this location
+00000004:             ; ; No more than 8 bombs
+00000004:             ; pmbBoard
+00000004: 00000001    ;         DEFW  1,-1, 1, 0, 0, 1,-1,-1, 1, 1, 1, 0, 0, 1, 3,-1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 
+00000008: FFFFFFFF    ; 0, 0, 0, 0, 0, 1,-1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,-1, 1, 0, 0, 1, 1, 2, 2, 2, 1, 0, 0, 1,-1, 2,
+0000000C: 00000001    ; -1, 1, 0, 0, 0
+00000010: 00000000    ; 
+00000014: 00000000    ; 
+00000018: 00000001    ; 
+0000001C: FFFFFFFF    ; 
+00000020: FFFFFFFF    ; 
+00000024: 00000001    ; 
+00000028: 00000001    ; 
+0000002C: 00000001    ; 
+00000030: 00000000    ; 
+00000034: 00000000    ; 
+00000038: 00000001    ; 
+0000003C: 00000003    ; 
+00000040: FFFFFFFF    ; 
+00000044: 00000000    ; 
+00000048: 00000000    ; 
+0000004C: 00000000    ; 
+00000050: 00000000    ; 
+00000054: 00000000    ; 
+00000058: 00000000    ; 
+0000005C: 00000001    ; 
+00000060: 00000001    ; 
+00000064: 00000001    ; 
+00000068: 00000001    ; 
+0000006C: 00000001    ; 
+00000070: 00000000    ; 
+00000074: 00000000    ; 
+00000078: 00000000    ; 
+0000007C: 00000000    ; 
+00000080: 00000000    ; 
+00000084: 00000001    ; 
+00000088: FFFFFFFF    ; 
+0000008C: 00000001    ; 
+00000090: 00000001    ; 
+00000094: 00000001    ; 
+00000098: 00000001    ; 
+0000009C: 00000000    ; 
+000000A0: 00000000    ; 
+000000A4: 00000001    ; 
+000000A8: 00000001    ; 
+000000AC: 00000001    ; 
+000000B0: 00000001    ; 
+000000B4: FFFFFFFF    ; 
+000000B8: 00000001    ; 
+000000BC: 00000000    ; 
+000000C0: 00000000    ; 
+000000C4: 00000001    ; 
+000000C8: 00000001    ; 
+000000CC: 00000002    ; 
+000000D0: 00000002    ; 
+000000D4: 00000002    ; 
+000000D8: 00000001    ; 
+000000DC: 00000000    ; 
+000000E0: 00000000    ; 
+000000E4: 00000001    ; 
+000000E8: FFFFFFFF    ; 
+000000EC: 00000002    ; 
+000000F0: FFFFFFFF    ; 
+000000F4: 00000001    ; 
+000000F8: 00000000    ; 
+000000FC: 00000000    ; 
+00000100: 00000000    ; 
+00000104:             ; pmbBoardMask
+00000104: 00000000    ;         DEFW  0,-1,-1,-1,-1, 0,-1, 0,-1,-1,-1,-1,-1,-1, 0,-1,-1,-1,-1,-1, 0,-1,-1,-1, 0, 0,-1,-
+00000108: FFFFFFFF    ; 1,-1,-1,-1,-1,-1,-1,-1, 0, 0,-1,-1,-1,-1, 0,-1, 0,-1,-1,-1,-1,-1,-1, 0,-1,-1,-1,-1,-1, 0,-1,-1,
+0000010C: FFFFFFFF    ; -1, 0, 0,-1,-1
+00000110: FFFFFFFF    ; 
+00000114: FFFFFFFF    ; 
+00000118: 00000000    ; 
+0000011C: FFFFFFFF    ; 
+00000120: 00000000    ; 
+00000124: FFFFFFFF    ; 
+00000128: FFFFFFFF    ; 
+0000012C: FFFFFFFF    ; 
+00000130: FFFFFFFF    ; 
+00000134: FFFFFFFF    ; 
+00000138: FFFFFFFF    ; 
+0000013C: 00000000    ; 
+00000140: FFFFFFFF    ; 
+00000144: FFFFFFFF    ; 
+00000148: FFFFFFFF    ; 
+0000014C: FFFFFFFF    ; 
+00000150: FFFFFFFF    ; 
+00000154: 00000000    ; 
+00000158: FFFFFFFF    ; 
+0000015C: FFFFFFFF    ; 
+00000160: FFFFFFFF    ; 
+00000164: 00000000    ; 
+00000168: 00000000    ; 
+0000016C: FFFFFFFF    ; 
+00000170: FFFFFFFF    ; 
+00000174: FFFFFFFF    ; 
+00000178: FFFFFFFF    ; 
+0000017C: FFFFFFFF    ; 
+00000180: FFFFFFFF    ; 
+00000184: FFFFFFFF    ; 
+00000188: FFFFFFFF    ; 
+0000018C: FFFFFFFF    ; 
+00000190: 00000000    ; 
+00000194: 00000000    ; 
+00000198: FFFFFFFF    ; 
+0000019C: FFFFFFFF    ; 
+000001A0: FFFFFFFF    ; 
+000001A4: FFFFFFFF    ; 
+000001A8: 00000000    ; 
+000001AC: FFFFFFFF    ; 
+000001B0: 00000000    ; 
+000001B4: FFFFFFFF    ; 
+000001B8: FFFFFFFF    ; 
+000001BC: FFFFFFFF    ; 
+000001C0: FFFFFFFF    ; 
+000001C4: FFFFFFFF    ; 
+000001C8: FFFFFFFF    ; 
+000001CC: 00000000    ; 
+000001D0: FFFFFFFF    ; 
+000001D4: FFFFFFFF    ; 
+000001D8: FFFFFFFF    ; 
+000001DC: FFFFFFFF    ; 
+000001E0: FFFFFFFF    ; 
+000001E4: 00000000    ; 
+000001E8: FFFFFFFF    ; 
+000001EC: FFFFFFFF    ; 
+000001F0: FFFFFFFF    ; 
+000001F4: 00000000    ; 
+000001F8: 00000000    ; 
+000001FC: FFFFFFFF    ; 
+00000200: FFFFFFFF    ; 
+00000204:             ; 
+00000204:             ;         ALIGN
+00000204:             ; 
+00000204:             ; ; printMaskedBoard -- print the board with only the squares visible when boardMask contains zer
+                      ; o
+00000204:             ; ; Input: R0 <-- Address of board
+00000204:             ; ;        R1 <-- Address of board Mask
+00000204:             ; 
+00000204:             ; 
+00000204:             ; test_printMaskedBoard
+00000204: E24F0F82    ;         ADR R0, pmbBoard 
+00000208: E24F1F43    ;         ADR R1, pmbBoardMask
+0000020C: EB000000    ;         BL printMaskedBoard
+00000210: EF000002    ;         SWI 2
+00000214:             ; 
+00000214:             ; 
+00000214:             ; ; printBoard -- print the board 
+00000214:             ; ; Input: R0 <-- Address of board
+00000214:             ; printMaskedBoard   
+00000214:             ; ; Insert your implementation here
+00000214:             ; 
+00000214: E3A0D801    ; MOV R13, #0x10000 ; stack base address
+00000218:             ; 
+00000218: E92D0010    ; STMFD R13!, {R4}
+0000021C: E92D0020    ; STMFD R13!, {R5}
+00000220:             ; 
+00000220: E1A04000    ; MOV R4, R0
+00000224: E1A05001    ; MOV R5, R1
+00000228:             ; 
+00000228: E3A00020    ; MOV R0, #32
+0000022C:             ; 
+0000022C: EF000000    ; SWI 0
+00000230: EF000000    ; SWI 0
+00000234: EF000000    ; SWI 0
+00000238: E3A03000    ; MOV R3, #0
+0000023C:             ; 
+0000023C: E3A01001    ; MOV R1, #1
+00000240:             ; 
+00000240:             ; topRow
+00000240:             ; 
+00000240: E3A00020    ;         MOV R0, #32
+00000244: EF000000    ;         SWI 0
+00000248: EF000000    ;         SWI 0
+0000024C:             ; 
+0000024C: E1A00001    ;         MOV R0, R1
+00000250: EF000004    ;         SWI 4
+00000254:             ;         
+00000254: E3A00020    ;         MOV R0, #32
+00000258: EF000000    ;         SWI 0
+0000025C: EF000000    ;         SWI 0
+00000260:             ; 
+00000260: E2811001    ;         ADD R1, R1, #1
+00000264:             ; 
+00000264: E3510009    ;         CMP R1,#9
+00000268: 1AFFFFF4    ;         BNE topRow
+0000026C: E3A01001    ;         MOV R1, #1 ; reset R0 after its use
+00000270:             ; 
+00000270:             ; RowAdd
+00000270:             ;       
+00000270: E3A0000A    ;         MOV R0, #10
+00000274: EF000000    ;         SWI 0
+00000278: EF000000    ;         SWI 0
+0000027C:             ; 
+0000027C: E1A00001    ;         MOV R0, R1
+00000280: EF000004    ;         SWI 4
+00000284: E3A00020    ;         MOV R0, #32
+00000288: EF000000    ;         SWI 0
+0000028C: EF000000    ;         SWI 0  
+00000290:             ; 
+00000290:             ; PrintTableRow ; sub-sub routine within RowAdd | ;0 = show value | !0 = show | R2 is used for ad
+                      ; dressing tables
+00000290:             ; 
+00000290: E3A00020    ;         MOV R0, #32
+00000294: EF000000    ;         SWI 0
+00000298: EF000000    ;         SWI 0
+0000029C:             ; 
+0000029C: E7950003    ;         LDR R0, [R5,R3] ; THIS SHOULD BE THE MASKED BOARD ARRAY
+000002A0: E3500000    ;         CMP R0, #0
+000002A4: 0A000002    ;         BEQ PRINTVALUE
+000002A8:             ; 
+000002A8:             ; 
+000002A8: E3A00023    ;         MOV R0, #35
+000002AC: EF000000    ;         SWI 0
+000002B0: EA000008    ;         B Skip
+000002B4:             ; 
+000002B4:             ; 
+000002B4:             ; 
+000002B4:             ; 
+000002B4:             ; PRINTVALUE      ; THIS NEEDS TO BE LOOKED AT 
+000002B4:             ;         
+000002B4:             ; 
+000002B4:             ;         
+000002B4: E7940003    ;         LDR R0, [R4,R3]
+000002B8:             ;         
+000002B8: E3500000    ;         CMP R0, #0
+000002BC: 03A00020    ;         MOVEQ R0 , #32 
+000002C0: 0F000000    ;         SWIEQ 0
+000002C4:             ; 
+000002C4: E3700001    ;         CMP R0, #-1
+000002C8: 03A0004D    ;         MOVEQ R0 , #77
+000002CC: 0F000000    ;         SWIEQ 0
+000002D0:             ; 
+000002D0: E3500020    ;         CMP R0, #32
+000002D4: BF000004    ;         SWILT 4
+000002D8:             ; 
+000002D8:             ;   
+000002D8:             ; 
+000002D8:             ; 
+000002D8:             ; 
+000002D8:             ; Skip
+000002D8:             ; 
+000002D8: E3A00020    ;         MOV R0, #32
+000002DC: EF000000    ;         SWI 0
+000002E0: EF000000    ;         SWI 0
+000002E4:             ; 
+000002E4: E2833004    ;         ADD R3, R3, #4
+000002E8:             ; 
+000002E8: E203001F    ;         AND R0, R3, #31
+000002EC: E3500000    ;         CMP R0, #0
+000002F0:             ;         
+000002F0: 1AFFFFE6    ;         BNE PrintTableRow
+000002F4:             ; 
+000002F4:             ; 
+000002F4:             ; RowAdd_pt_two ; end section of row add
+000002F4:             ;         
+000002F4:             ; 
+000002F4:             ; 
+000002F4:             ;         
+000002F4:             ; 
+000002F4: E3510008    ;         CMP R1,#8
+000002F8: E2811001    ;         ADD R1,R1,#1
+000002FC: 1AFFFFDB    ;         BNE RowAdd
+00000300:             ;         
+00000300: E8BD0020    ;         LDMFD R13!, {R5}
+00000304: E8BD0010    ;         LDMFD R13!, {R4}
+00000308:             ; 
+00000308: E12FFF1E    ;         BX LR
+0000030C:             ; 
+0000030C:             ;    
+0000030C:             ; 
+
+Symbol Table: Labels
+: pmbBoard                          00000004  Local -- ARM
+: pmbBoardMask                      00000104  Local -- ARM
+: test_printMaskedBoard             00000204  Local -- ARM
+: printMaskedBoard                  00000214  Local -- ARM
+: topRow                            00000240  Local -- ARM
+: RowAdd                            00000270  Local -- ARM
+: PrintTableRow                     00000290  Local -- ARM
+: PRINTVALUE                        000002B4  Local -- ARM
+: Skip                              000002D8  Local -- ARM
+: RowAdd_pt_two                     000002F4  Local -- ARM

@@ -1,0 +1,168 @@
+KMD
+00000000: EA000051    ;                 B main
+00000004:             ; 
+00000004:             ; ; r1 = men
+00000004:             ; ; r2 = sub loop men
+00000004:             ; 
+00000004:             ; ; numbers
+00000004: 00000004    ; verses  DEFW    4
+00000008:             ; 
+00000008:             ; ; Insert any strings here
+00000008: 20 6D 65 6E ; mow DEFB " men went to mow",0
+0000000C: 20 77 65 6E ; 
+00000010: 74 20 74 6F ; 
+00000014: 20 6D 6F 77 ; 
+00000018: 00          ; 
+00000019: 20 6D 61 6E ; mowman DEFB " man went to mow",0
+0000001D: 20 77 65 6E ; 
+00000021: 74 20 74 6F ; 
+00000025: 20 6D 6F 77 ; 
+00000029: 00          ; 
+0000002A: 57 65 6E 74 ; Wmow DEFB "Went to mow a meadow",0
+0000002E: 20 74 6F 20 ; 
+00000032: 6D 6F 77 20 ; 
+00000036: 61 20 6D 65 ; 
+0000003A: 61 64 6F 77 ; 
+0000003E: 00          ; 
+0000003F: 20 6D 65 6E ; men DEFB " men ",0
+00000043: 20 00       ; 
+00000045: 20 6D 65 6E ; menC DEFB " men, ",0
+00000049: 2C 20 00    ; 
+0000004C: 20 6D 61 6E ; Spot DEFB " man and his dog, Spot",0
+00000050: 20 61 6E 64 ; 
+00000054: 20 68 69 73 ; 
+00000058: 20 64 6F 67 ; 
+0000005C: 2C 20 53 70 ; 
+00000060: 6F 74 00    ; 
+00000063:             ; 
+00000063:             ; 
+00000064:             ;                 ALIGN
+00000064:             ; 
+00000064:             ; 
+00000064:             ; 
+00000064:             ; comString ; This is num men, num men, num man and his dog
+00000064:             ; 
+00000064: E1A00001    ;         MOV R0, R1 ; Prints amount of men
+00000068: E1A02001    ;         MOV R2, R1 ; reset R2 to latest global men
+0000006C: EF000004    ;         SWI 4
+00000070:             ; 
+00000070: E24F0070    ;         ADR R0, mow ; mow string
+00000074: EF000003    ;         SWI 3
+00000078:             ; 
+00000078: E3A0000A    ;         MOV R0, #10 ; newline
+0000007C: EF000000    ;         SWI 0
+00000080:             ; 
+00000080:             ;         ; get amount of men into register 
+00000080:             ; 
+00000080: E1A00002    ;         MOV R0, R2 ;put comma men into R0 for decrement loop
+00000084: E3500000    ;         CMP R0, #0 ;compare them, if theyre 
+00000088: CA000000    ;         BGT printMen
+0000008C: BA00002B    ;         BLT preEnd
+00000090:             ; 
+00000090:             ; printMen ; this does the actual processing of the comma string
+00000090:             ; 
+00000090: EF000004    ;         SWI 4 ; print comma men
+00000094:             ; 
+00000094: E24F0057    ;         ADR R0, menC ; "print men," 
+00000098: EF000003    ;         SWI 3
+0000009C:             ; 
+0000009C: E2422001    ;         SUB R2, R2, #1 ; take one man off comma men (r2)
+000000A0: E1A00002    ;         MOV R0, R2  ; store new r2 in r0
+000000A4:             ; 
+000000A4: E3500001    ;         CMP R0, #1 ;compare r0 to number  (man and his dog)
+000000A8: CAFFFFF8    ;         BGT printMen ; if its greater than number, start this subroutine again
+000000AC: DAFFFFFF    ;         BLE dog ;'else', start dog subroutine
+000000B0:             ; 
+000000B0:             ; 
+000000B0:             ; dog 
+000000B0:             ; 
+000000B0: E1A02000    ;         MOV R2,R0 ;print last man
+000000B4: EF000004    ;         SWI 4
+000000B8:             ; 
+000000B8: E24F0074    ;         ADR R0, Spot ; and his dog spot,
+000000BC: EF000003    ;         SWI 3
+000000C0:             ; 
+000000C0: E3A0000A    ;         MOV R0, #10 ; newline
+000000C4: EF000000    ;         SWI 0
+000000C8:             ; 
+000000C8: E24F00A6    ;         ADR R0, Wmow ; went to mow a meadow
+000000CC: EF000003    ;         SWI 3
+000000D0:             ; 
+000000D0: E3A0000A    ;         MOV R0, #10 ; newline
+000000D4: EF000000    ;         SWI 0
+000000D8:             ; 
+000000D8: E3A0000A    ;         MOV R0, #10 ;  newline
+000000DC: EF000000    ;         SWI 0
+000000E0:             ; 
+000000E0: E2411001    ;         SUB R1, R1, #1 ; subtract global men
+000000E4:             ; 
+000000E4: E3510001    ;         CMP R1, #1
+000000E8: CAFFFFDD    ;         BGT comString
+000000EC: EA000013    ;         B preEnd
+000000F0:             ; 
+000000F0:             ; end
+000000F0:             ; 
+000000F0: E1A00001    ;         MOV R0, R1
+000000F4: EF000004    ;         SWI 4
+000000F8:             ; 
+000000F8: E24F00E7    ;         ADR R0, mowman
+000000FC: EF000003    ;         SWI 3
+00000100:             ; 
+00000100: E3A0000A    ;         MOV R0, #10
+00000104: EF000000    ;         SWI 0
+00000108:             ; 
+00000108: E24F30E6    ;         ADR R3, Wmow
+0000010C: E1A00003    ;         MOV R0, R3
+00000110: EF000003    ;         SWI 3
+00000114:             ; 
+00000114: E3A0000A    ;         MOV R0, #10
+00000118: EF000000    ;         SWI 0
+0000011C:             ; 
+0000011C: E1A00001    ;         MOV R0, R1
+00000120: EF000004    ;         SWI 4
+00000124:             ; 
+00000124: E24F00E0    ;         ADR R0, Spot
+00000128: EF000003    ;         SWI 3
+0000012C:             ; 
+0000012C: E3A0000A    ;         MOV R0, #10
+00000130: EF000000    ;         SWI 0
+00000134:             ; 
+00000134: E1A00003    ;         MOV R0, R3
+00000138: EF000003    ;         SWI 3
+0000013C:             ; 
+0000013C: EF000002    ;         SWI 2
+00000140:             ; 
+00000140:             ; 
+00000140:             ; preEnd
+00000140:             ; 
+00000140: E3510001    ;         CMP R1, #1 ;  compare global men to 1
+00000144: CAFFFFC6    ;         BGT comString ; if men are greater than 1, start 
+00000148:             ; 
+00000148: EAFFFFE8    ;         B end
+0000014C:             ;         
+0000014C:             ; 
+0000014C:             ; 
+0000014C:             ; 
+0000014C:             ; main
+0000014C:             ;         ; Register setup
+0000014C: E51F1150    ;         LDR R1, verses
+00000150: E51F2154    ;         LDR R2, verses
+00000154:             ;         
+00000154: EAFFFFC2    ;         B comString
+00000158:             ; 
+00000158: EF000002    ;         SWI 2
+
+Symbol Table: Labels
+: verses                            00000004  Local -- ARM
+: mow                               00000008  Local -- ARM
+: mowman                            00000019  Local -- ARM
+: Wmow                              0000002A  Local -- ARM
+: men                               0000003F  Local -- ARM
+: menC                              00000045  Local -- ARM
+: Spot                              0000004C  Local -- ARM
+: comString                         00000064  Local -- ARM
+: printMen                          00000090  Local -- ARM
+: dog                               000000B0  Local -- ARM
+: end                               000000F0  Local -- ARM
+: preEnd                            00000140  Local -- ARM
+: main                              0000014C  Local -- ARM

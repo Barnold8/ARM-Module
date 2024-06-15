@@ -1,0 +1,294 @@
+KMD
+00000000: EA000008    ; B main
+00000004: 0000000C    ; width    DEFW 12
+00000008:             ; 
+00000008:             ; ; Use this buffer to store your words, there's space for words up to 32 bytes long
+00000008:             ; ;
+00000008:             ; ; When you store characters here, it will overwrite the values that already exist.
+00000008: 30 31 32 33 ; buffer    DEFB "0123456890123456789012345678901",0 
+0000000C: 34 35 36 38 ; 
+00000010: 39 30 31 32 ; 
+00000014: 33 34 35 36 ; 
+00000018: 37 38 39 30 ; 
+0000001C: 31 32 33 34 ; 
+00000020: 35 36 37 38 ; 
+00000024: 39 30 31 00 ; 
+00000028:             ; 
+00000028:             ;         ALIGN
+00000028:             ; main
+00000028:             ; ; You will need to insert any setup code to 
+00000028:             ; ; execute before the loop here
+00000028:             ;                 
+00000028: E3A05000    ;                 MOV R5, #0 ; reserved for loading width
+0000002C:             ; 
+0000002C: E24F1030    ;                 ADRL R1, width ; put addr of width into r1
+00000030: E5117000    ;                 LDR R7, [r1] ; load the value of width into r5
+00000034:             ; 
+00000034: E3A00000    ;                 MOV R0, #0 ; reserved for chars
+00000038: E3A01000    ;                 MOV R1, #0 ; reserved for buffer address
+0000003C: E3A02000    ;                 MOV R2, #0 ; reserved for pointer offset
+00000040: E3A03000    ;                 MOV R3, #0 ; reserved for current line char count
+00000044: E3A04000    ;                 MOV R4, #0 ; reserved for current word char count
+00000048: E3A05000    ;                 MOV R5, #0 ; reserved for space count (how many spaced were inputted by the use
+                      ; r)
+0000004C: E3A06000    ;                 MOV R6, #0 ; SPACE FLAG - says if a space exists after a word or not
+00000050:             ;              
+00000050: E3A08000    ;                 MOV R8, #0
+00000054: E3A09000    ;                 MOV R9, #0
+00000058:             ; 
+00000058:             ; 
+00000058: E24F1058    ;                 ADRL R1, buffer ; put buffer address into R1
+0000005C:             ;                 
+0000005C: EAFFFFFF    ;         B readChar
+00000060:             ; loop
+00000060:             ; 
+00000060:             ; ;        Print character
+00000060:             ; 
+00000060:             ; readChar
+00000060:             ; 
+00000060:             ;         ;memory check ;
+00000060: E352001D    ;         CMP R2,#29
+00000064: A3A02000    ;         MOVGE R2, #0
+00000068:             ;         ;-------------;
+00000068:             ; 
+00000068: EF000001    ;         SWI 1
+0000006C: E3500023    ;         CMP R0, #'#'
+00000070: 0A00004C    ;         BEQ end
+00000074: E3500020    ;         CMP R0, #32
+00000078: 0A000008    ;         BEQ space ; goto space subroutine
+0000007C: E350000A    ;         CMP R0, #10
+00000080: 0A000009    ;         BEQ enter
+00000084: E7C10002    ;         STRB R0,[R1,R2] 
+00000088: E2822001    ;         ADD R2, R2, #1 ; add to pointer
+0000008C: E2833001    ;         ADD R3, R3, #1 ; add to current characters on the current line
+00000090: E2844001    ;         ADD R4, R4, #1 ; add to current chars in word buffer
+00000094: E2838001    ;         ADD R8, R3, #1          ; Add R3 (current char count of current line) to the R4 registe
+                      ; r where R4 is the current char count of the word being written in buffer
+00000098: 1AFFFFF0    ;         BNE readChar
+0000009C: EF000002    ;         SWI 2
+000000A0:             ; 
+000000A0:             ; space 
+000000A0:             ; 
+000000A0: E3540000    ;         CMP R4, #0 ; if the char count in buffer is >0 (if theres actually new data there, prin
+                      ; t a word)
+000000A4: AA00000E    ;         BGE print_word
+000000A8:             ; 
+000000A8: EAFFFFEC    ;         B readChar
+000000AC:             ; 
+000000AC:             ; enter
+000000AC:             ; 
+000000AC: E1580007    ;         CMP R8, R7              ; Check the current line length against the possible line lengt
+                      ; h
+000000B0:             ; 
+000000B0: CA00002D    ;         BGT enter_wordNewLine 
+000000B4:             ; 
+000000B4: E3560001    ;         CMP R6, #1 ; if flag r6 is raised, include a space on print
+000000B8: 0B000015    ;         BLEQ space_
+000000BC:             ; 
+000000BC: E3A00000    ;         MOV R0, #0              ; null termination char appended to string
+000000C0: E7C10002    ;         STRB R0, [R1, R2]       ; store null termination char at end of string
+000000C4: E24F00C4    ;         ADR R0, buffer          ; Load buffer address into memory
+000000C8: EF000003    ;         SWI 3                   ; print string from base address of string
+000000CC: E3A02000    ;         MOV R2, #0              ; reset pointer offset
+000000D0: E3A04000    ;         MOV R4, #0              ; Reset current char count for buffer
+000000D4: E3A06001    ;         MOV R6, #1              ; Raise flag to allow space to be printed before word
+000000D8:             ;         
+000000D8: E3A0000A    ;         MOV R0,#10
+000000DC: EF000000    ;         SWI 0
+000000E0:             ; 
+000000E0: EAFFFFDE    ;         B readChar
+000000E4:             ; 
+000000E4:             ; 
+000000E4:             ; print_word
+000000E4:             ; 
+000000E4: E1580007    ;         CMP R8, R7              ; Check the current line length against the possible line lengt
+                      ; h
+000000E8:             ; 
+000000E8: CA000010    ;         BGT wordNewLine 
+000000EC:             ; 
+000000EC: E3560001    ;         CMP R6, #1 ; if flag r6 is raised, include a space on print
+000000F0: 0B000007    ;         BLEQ space_
+000000F4:             ; 
+000000F4: E3A00000    ;         MOV R0, #0              ; null termination char appended to string
+000000F8: E7C10002    ;         STRB R0, [R1, R2]       ; store null termination char at end of string
+000000FC: E24F00FC    ;         ADR R0, buffer          ; Load buffer address into memory
+00000100: EF000003    ;         SWI 3                   ; print string from base address of string
+00000104: E3A02000    ;         MOV R2, #0              ; reset pointer offset
+00000108: E3A04000    ;         MOV R4, #0              ; Reset current char count for buffer
+0000010C: E3A06001    ;         MOV R6, #1              ; Raise flag to allow space to be printed before word
+00000110:             ;         
+00000110: EAFFFFD2    ;         B readChar
+00000114:             ; space_ 
+00000114: E2833001    ;         ADD R3, R3, #1          ; Add space to char counter for line 
+00000118: E3A00020    ;         MOV R0, #32             ; put space character in R0 register
+0000011C: EF000000    ;         SWI 0                   ; print space char
+00000120: E12FFF1E    ;         BX LR                   ; jump back to print_word
+00000124:             ; 
+00000124:             ; newline
+00000124:             ; 
+00000124: E3A0000A    ;         MOV R0, #10
+00000128: EF000000    ;         SWI 0
+0000012C:             ; 
+0000012C: EAFFFFCB    ;         B readChar
+00000130:             ; 
+00000130:             ; wordNewLine
+00000130:             ; 
+00000130: E3560001    ;         CMP R6, #1 ; if flag r6 is raised, include a space on print
+00000134: 0BFFFFF6    ;         BLEQ space_
+00000138:             ; 
+00000138: E35A0001    ;         CMP R10, #1
+0000013C: 03A0000A    ;         MOVEQ R0, #10
+00000140: 0F000000    ;         SWIEQ 0
+00000144:             ; 
+00000144: E3A00000    ;         MOV R0, #0 ; null termination char appended to string
+00000148: E7C10002    ;         STRB R0, [R1, R2]
+0000014C: E24F0F53    ;         ADR R0, buffer
+00000150: EF000003    ;         SWI 3
+00000154: E3A02000    ;         MOV R2, #0 
+00000158:             ;         ;MOV R6, #0
+00000158: E3A08000    ;         MOV R8, #0
+0000015C: E3A03000    ;         MOV R3, #0
+00000160: E3A04000    ;         MOV R4, #0
+00000164: E3A05000    ;         MOV R5, #0
+00000168:             ; 
+00000168: EAFFFFBC    ;         B readChar
+0000016C:             ; 
+0000016C:             ; enter_wordNewLine
+0000016C:             ; 
+0000016C: E3560001    ;         CMP R6, #1 ; if flag r6 is raised, include a space on print
+00000170: 0BFFFFE7    ;         BLEQ space_
+00000174:             ; 
+00000174:             ; 
+00000174: E3A00000    ;         MOV R0, #0 ; null termination char appended to string
+00000178: E7C10002    ;         STRB R0, [R1, R2]
+0000017C: E24F0F5F    ;         ADR R0, buffer
+00000180: EF000003    ;         SWI 3
+00000184: E3A02000    ;         MOV R2, #0 
+00000188:             ;         ;MOV R6, #0
+00000188: E3A08000    ;         MOV R8, #0
+0000018C: E3A03000    ;         MOV R3, #0
+00000190: E3A04000    ;         MOV R4, #0
+00000194: E3A05000    ;         MOV R5, #0
+00000198: E3A0000A    ;         MOV R0, #10
+0000019C: EF000000    ;         SWI 0
+000001A0: E3A0A001    ;         MOV R10, #1 
+000001A4:             ; 
+000001A4: EAFFFFAD    ;         B readChar
+000001A8:             ; 
+000001A8:             ; end
+000001A8:             ; 
+000001A8: E3560001    ;         CMP R6, #1 ; if flag r6 is raised, include a space on print
+000001AC: 0BFFFFD8    ;         BLEQ space_
+000001B0:             ; 
+000001B0: E3A00000    ;         MOV R0, #0              ; null termination char appended to string
+000001B4: E7C10002    ;         STRB R0, [R1, R2]
+000001B8: E24F0F6E    ;         ADR R0, buffer
+000001BC: EF000003    ;         SWI 3
+000001C0: E3A02000    ;         MOV R2, #0 
+000001C4:             ;        ; ADD R8, R3,R4
+000001C4: E1580007    ;         CMP R8, R7             ; this checks the current line length against the possible line 
+                      ; length
+000001C8: E3A04000    ;         MOV R4, #0
+000001CC: E3A06001    ;         MOV R6, #1
+000001D0:             ;         ;BGE wordNewLineEnd        
+000001D0:             ; 
+000001D0:             ; 
+000001D0: EF000002    ;         SWI 2
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; ;TODO
+000001D4:             ; 
+000001D4:             ; ; Read width using LDR                                                                  - Done
+000001D4:             ; ; Read amount of characters on current line                                             - Done
+000001D4:             ; ; Store chars using STRB                                                                - Done 
+                      ;                                                           
+000001D4:             ; ; Store null termination char at end of current string                                  - Done
+000001D4:             ; ; Print string with SWI 3                                                               - Done
+000001D4:             ; ; Print newline if the word plus current char count is greater than the width           - Maybe
+                      ;  done? idk anymore
+000001D4:             ; ; Detect spaces                                                                         - Done
+000001D4:             ; ; Detect two spaces in one go                                                           - Done
+000001D4:             ; ; Pressing space twice will print a space                                               - Done
+000001D4:             ; ; Pressing the RETURN KEY will start text on newline                                    - Done
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; ; First space prints the word, the second, prints a space#
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; ; TwoSpace ; When two spaces are detected, print space
+000001D4:             ;        
+000001D4:             ; ;         MOV R5, #0
+000001D4:             ; ;          MOV R0, #32
+000001D4:             ; ;         SWI 0
+000001D4:             ;         
+000001D4:             ; ;         ;ADD R3, R3, #1
+000001D4:             ; ;         B loop
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; ;printWord
+000001D4:             ;       
+000001D4:             ; ;        CMP R9, #0
+000001D4:             ; ;        BEQ readChar
+000001D4:             ; 
+000001D4:             ; ;        MOV R0, #0              ; null termination char appended to string
+000001D4:             ; ;        STRB R0, [R1, R2]
+000001D4:             ; ;        ADR R0, buffer
+000001D4:             ; ;        SWI 3
+000001D4:             ; ;        MOV R2, #0 
+000001D4:             ; ;        MOV R6, #0
+000001D4:             ; ;        ;ADD R6, R6, #1
+000001D4:             ; 
+000001D4:             ; 
+000001D4:             ; ;        ADD R8, R3,R4
+000001D4:             ; ;        CMP R8, R7             ; this checks the current line length against the possible line
+                      ;  length
+000001D4:             ; ;       ; BGT wordNewLine 
+000001D4:             ;         
+000001D4:             ; ;        ;MOV R6, #0    
+000001D4:             ; ;      B readChar
+000001D4:             ; 
+000001D4:             ; ;printSpace
+000001D4:             ; ;        CMP R9, #0
+000001D4:             ; ;        BEQ readChar
+000001D4:             ; ;        ; MOV R6, #0
+000001D4:             ;         
+000001D4:             ; ;        ; MOV R0, #32
+000001D4:             ; ;        ; SWI 0
+000001D4:             ; ;        ; B readChar
+000001D4:             ; 
+000001D4:             ; ;        MOV R0, #0              ; null termination char appended to string
+000001D4:             ; ;        STRB R0, [R1, R2]
+000001D4:             ; ;        ADR R0, buffer
+000001D4:             ; ;        SWI 3
+000001D4:             ; ;        MOV R2, #0 
+000001D4:             ;         
+000001D4:             ; ;        ;ADD R6, R6, #1
+000001D4:             ; 
+000001D4:             ; ;        ADD R8, R3,R4
+000001D4:             ; ;        CMP R8, R7             ; this checks the current line length against the possible line
+                      ;  length
+000001D4:             ; ;        BGT wordNewLine 
+000001D4:             ;         
+000001D4:             ; ;        MOV R0, #32
+000001D4:             ; ;        SWI 0
+000001D4:             ; 
+000001D4:             ; ;        ;MOV R6, #0
+000001D4:             ; ;        B readChar
+000001D4:             ; 
+
+Symbol Table: Labels
+: width                             00000004  Local -- ARM
+: buffer                            00000008  Local -- ARM
+: main                              00000028  Local -- ARM
+: loop                              00000060  Local -- ARM
+: readChar                          00000060  Local -- ARM
+: space                             000000A0  Local -- ARM
+: enter                             000000AC  Local -- ARM
+: print_word                        000000E4  Local -- ARM
+: space_                            00000114  Local -- ARM
+: newline                           00000124  Local -- ARM
+: wordNewLine                       00000130  Local -- ARM
+: enter_wordNewLine                 0000016C  Local -- ARM
+: end                               000001A8  Local -- ARM
